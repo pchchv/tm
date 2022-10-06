@@ -101,3 +101,7 @@ func (t *TM) Run() bool {
 	}
 	return latestResult
 }
+
+func (t *TM) ExportTape() []string {
+	return t.Input.Symbol
+}
