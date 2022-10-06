@@ -19,3 +19,12 @@ type ConfigOut struct {
 	ModifiedVal string
 	TapeMove    int
 }
+
+func NewTM() *TM {
+	newTM := new(TM)
+	newTM.States = make(map[string]bool)
+	newTM.FinalStates = make(map[string]bool)
+	newTM.Inputs = make(map[string]bool)
+	newTM.Configs = make(map[ConfigIn]ConfigOut)
+	return newTM
+}
