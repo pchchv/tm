@@ -28,3 +28,45 @@ func NewTM() *TM {
 	newTM.Configs = make(map[ConfigIn]ConfigOut)
 	return newTM
 }
+
+// Input State and declare if it is final state
+func (t *TM) InputState(state string, isFinal bool) {
+	//First input state will be init state
+	if t.CurrentState == "" {
+		t.CurrentState = state
+	}
+	//Add newState
+	t.States[state] = true
+	if isFinal {
+		t.FinalStates[state] = true
+	}
+}
+
+// Input turing machine tape data
+func (t *TM) InputTape(tracks ...string) {
+	newTape := NewTape(tracks)
+	t.Input = newTape
+}
+
+// Input config
+// InputConfig parameter as follow:
+// - SourceState,
+// - Input
+// - Modified Value
+// - DestinationState
+// - Tape Head Move Direction
+func (t *TM) InputConfig(srcState string, input string, modifiedVal string, dstState string, tapeMove int) {
+	//Check state
+	if _, exist := t.States[srcState]; !exist {
+		return
+	}
+	if _, exist := t.States[dstState]; !exist {
+		return
+	}
+	//Add Input
+	t.Inputs[input] = true
+	//Add config
+	newConfigIn := ConfigIn{SrcState: srcState, Input: input}
+	newConfigOut := ConfigOut{ModifiedVal: modifiedVal, TapeMove: tapeMove, DstState: dstState}
+	t.Configs[newConfigIn] = newConfigOut
+}
