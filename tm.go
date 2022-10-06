@@ -86,10 +86,18 @@ func (t *TM) Step() bool {
 		t.Input.DoOption(newOut.ModifiedVal, newOut.TapeMove == MoveRight)
 		t.CurrentState = newOut.DstState
 	}
-
 	if _, exist := t.FinalStates[t.CurrentState]; exist {
 		return true
 	}
-
 	return false
+}
+
+// Run turing machine all tape data to the end
+func (t *TM) Run() bool {
+	var latestResult bool
+	for !t.Input.EndInput() {
+		//fmt.Println("run  index=", t.Input.Head)
+		latestResult = t.Step()
+	}
+	return latestResult
 }

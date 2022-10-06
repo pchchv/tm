@@ -26,6 +26,11 @@ func (t *Tape) ReadSymbol() string {
 	return t.Symbol[t.Head]
 }
 
+// Return if the tape is run to the end
+func (t *Tape) EndInput() bool {
+	return t.Head == len(t.Symbol) // When head exceed slice size, it is end
+}
+
 // Run tape head move and modify value
 func (t *Tape) DoOption(modifiedSym string, directToRight bool) {
 	if t.Head >= len(t.Symbol) {
