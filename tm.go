@@ -20,6 +20,11 @@ type ConfigOut struct {
 	TapeMove    int
 }
 
+const ( // iota is reset to 0
+	MoveLeft  = iota //0
+	MoveRight = iota //1
+)
+
 func NewTM() *TM {
 	newTM := new(TM)
 	newTM.States = make(map[string]bool)
@@ -69,4 +74,22 @@ func (t *TM) InputConfig(srcState string, input string, modifiedVal string, dstS
 	newConfigIn := ConfigIn{SrcState: srcState, Input: input}
 	newConfigOut := ConfigOut{ModifiedVal: modifiedVal, TapeMove: tapeMove, DstState: dstState}
 	t.Configs[newConfigIn] = newConfigOut
+}
+
+// Step will read a input and run single step, return if it is accept
+func (t *TM) Step() bool {
+	input := t.Input.ReadSymbol()
+	inConfig := ConfigIn{SrcState: t.CurrentState, Input: input}
+	if newOut, exist := t.Configs[inConfig]; !exist {
+		return false
+	} else {
+		t.Input.DoOption(newOut.ModifiedVal, newOut.TapeMove == MoveRight)
+		t.CurrentState = newOut.DstState
+	}
+
+	if _, exist := t.FinalStates[t.CurrentState]; exist {
+		return true
+	}
+
+	return false
 }
